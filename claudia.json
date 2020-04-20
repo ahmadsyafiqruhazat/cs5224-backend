@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "cs5224-backend-executor",
+    "name": "cs5224-backend",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "yg663b9ke0",
+    "module": "bin/api"
+  }
+}
