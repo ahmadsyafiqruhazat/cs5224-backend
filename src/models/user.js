@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
     models.User.belongsToMany(models.Lesson, { through: "UserLessons" });
-    models.User.belongsToMany(models.Event, { through: "UserEvents" });
+    models.User.hasMany(models.Event);
   };
   return User;
 };

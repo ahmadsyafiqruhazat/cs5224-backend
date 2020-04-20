@@ -63,20 +63,26 @@ router.get("/:email", async (req, res) => {
         "photoURL",
         "phoneNumber",
         "gender"
-      ],
-      include: {
-        model: Lesson
-      }
+      ]
     });
 
     if (!user) throw new Error("User not found");
+    let userLessons = await user.getLessons();
+    let userEvents = await user.getEvents();
 
-    const userLessons = user.Lessons.map(lessonObject => {
-      return lessonObject.name;
+    userLessons = userLessons.map(lesson => {
+      return lesson.name;
     });
-    let returnedUser = user.toJSON();
-    delete returnedUser.Lessons;
-    returnedUser.lessons = userLessons;
+
+    userEvents = userEvents.map(event => {
+      return event.title;
+    });
+
+    const returnedUser = {
+      ...user.toJSON(),
+      lessons: userLessons,
+      events: userEvents
+    };
 
     res.send(returnedUser);
   } catch (err) {
@@ -108,7 +114,7 @@ router.put("/:email", async (req, res) => {
   } catch (err) {
     await transaction.rollback();
 
-    if (err instanceof TypeError) {
+    if (err.name == "TypeError") {
       return res.status(404).json({ error: "User not found" });
     } else {
       console.log(err.stack);
