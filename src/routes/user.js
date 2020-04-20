@@ -5,30 +5,36 @@ const router = express.Router();
 const User = _database.User;
 const Lesson = _database.Lesson;
 
-router.post("/", async (req, res) => {
-  const userInformation = req.body;
-  const userLessons = userInformation.lessons;
+const createOrFindLessonTags = async (userLessons, transaction) => {
   let lessonTags = [];
+
+  for (let i = 0; i < userLessons.length; i++) {
+    let lesson = userLessons[i];
+    let [lessonTag, created] = await Lesson.findOrCreate({
+      where: {
+        name: lesson
+      },
+      defaults: {
+        name: lesson
+      },
+      transaction
+    });
+    lessonTags.push(lessonTag);
+  }
+
+  return lessonTags;
+};
+
+router.post("/", async (req, res) => {
+  let userInformation = req.body;
+  let userLessons = userInformation.lessons;
   let transaction;
 
   try {
     transaction = await _database.sequelize.transaction();
 
-    const newUser = await User.create(userInformation);
-
-    for (let i = 0; i < userLessons.length; i++) {
-      let lesson = userLessons[i];
-      const [lessonTag, created] = await Lesson.findOrCreate({
-        where: {
-          name: lesson
-        },
-        defaults: {
-          name: lesson
-        },
-        transaction
-      });
-      lessonTags.push(lessonTag);
-    }
+    let newUser = await User.create(userInformation);
+    let lessonTags = await createOrFindLessonTags(userLessons, transaction);
 
     if (lessonTags) {
       await newUser.setLessons(lessonTags, { transaction });
@@ -50,7 +56,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:email", async (req, res) => {
-  const userEmail = req.params.email;
+  let userEmail = req.params.email;
   try {
     let user = await User.findOne({
       where: {
@@ -75,10 +81,15 @@ router.get("/:email", async (req, res) => {
     });
 
     userEvents = userEvents.map(event => {
-      return event.title;
+      return {
+        id: event.id,
+        title: event.title,
+        startDate: event.startDate,
+        endDate: event.endDate
+      };
     });
 
-    const returnedUser = {
+    let returnedUser = {
       ...user.toJSON(),
       lessons: userLessons,
       events: userEvents
@@ -96,8 +107,9 @@ router.get("/:email", async (req, res) => {
 });
 
 router.put("/:email", async (req, res) => {
-  const userEmail = req.params.email;
-  const userUpdatedInformation = req.body;
+  let userEmail = req.params.email;
+  let userUpdatedInformation = req.body;
+  let updatedLessons = userUpdatedInformation.lessons;
   let transaction;
 
   try {
@@ -108,6 +120,13 @@ router.put("/:email", async (req, res) => {
     });
 
     await userToUpdate.update(userUpdatedInformation, { transaction });
+    if (updatedLessons) {
+      let lessonTags = await createOrFindLessonTags(
+        updatedLessons,
+        transaction
+      );
+      await userToUpdate.setLessons(lessonTags, { transaction });
+    }
     await transaction.commit();
 
     res.send({ message: "Successfully updated" });
