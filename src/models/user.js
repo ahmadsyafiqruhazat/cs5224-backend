@@ -12,7 +12,10 @@ export default (sequelize, DataTypes) => {
       displayName: DataTypes.STRING,
       photoURL: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
-      gender: DataTypes.STRING
+      gender: DataTypes.STRING,
+      about: DataTypes.STRING,
+      dob: DataTypes.STRING,
+      languages_known: DataTypes.STRING
     },
     {}
   );

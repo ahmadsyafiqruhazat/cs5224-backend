@@ -68,7 +68,10 @@ router.get("/:email", async (req, res) => {
         "displayName",
         "photoURL",
         "phoneNumber",
-        "gender"
+        "gender",
+        "about",
+        "dob",
+        "languages_known"
       ]
     });
 
