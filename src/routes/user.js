@@ -68,7 +68,10 @@ router.get("/:email", async (req, res) => {
         "displayName",
         "photoURL",
         "phoneNumber",
-        "gender"
+        "gender",
+        "about",
+        "dob",
+        "languages_known"
       ]
     });
 
@@ -96,6 +99,33 @@ router.get("/:email", async (req, res) => {
     };
 
     res.send(returnedUser);
+  } catch (err) {
+    if (err.message == "User not found") {
+      res.status(404).send({ error: err.message });
+    } else {
+      console.log(err.stack);
+      res.status(500).end();
+    }
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    let users = await User.findAll({
+      attributes: [
+        "email",
+        "role",
+        "displayName",
+        "photoURL",
+        "phoneNumber",
+        "gender",
+        "about",
+      ]
+    });
+
+    if (users.length === 0) throw new Error("Users not found");
+
+    res.send(users);
   } catch (err) {
     if (err.message == "User not found") {
       res.status(404).send({ error: err.message });
