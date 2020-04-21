@@ -109,6 +109,33 @@ router.get("/:email", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    let users = await User.findAll({
+      attributes: [
+        "email",
+        "role",
+        "displayName",
+        "photoURL",
+        "phoneNumber",
+        "gender",
+        "about",
+      ]
+    });
+
+    if (users.length === 0) throw new Error("Users not found");
+
+    res.send(users);
+  } catch (err) {
+    if (err.message == "User not found") {
+      res.status(404).send({ error: err.message });
+    } else {
+      console.log(err.stack);
+      res.status(500).end();
+    }
+  }
+});
+
 router.put("/:email", async (req, res) => {
   let userEmail = req.params.email;
   let userUpdatedInformation = req.body;
