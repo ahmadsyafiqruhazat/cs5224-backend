@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import express, { json, urlencoded } from "express";
 import logger from "morgan";
 import _database from "./models";
