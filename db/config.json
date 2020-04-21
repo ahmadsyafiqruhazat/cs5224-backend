@@ -1,26 +1,23 @@
 {
   "development": {
     "username": "postgres",
-    "password": null,
+    "password": "fXMJHdStNU2eamMBgIxt",
     "database": "cs5224",
-    "host": "127.0.0.1",
-    "dialect": "postgresql",
-    "operatorsAliases": false
+    "host": "cs5224.cqqprbs1ygmp.us-east-1.rds.amazonaws.com",
+    "dialect": "postgresql"
   },
   "test": {
     "username": "root",
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "dialect": "mysql"
   }
 }

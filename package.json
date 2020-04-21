@@ -5,13 +5,10 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src -d bin",
-    "start:dev": "nodemon --exec babel-node src/app.js",
-    "create": "yarn build && claudia create --region us-east-1 --api-module bin/api --profile student",
-    "update": "yarn build && claudia update --profile student"
+    "start:dev": "nodemon --exec babel-node src/app.js"
   },
   "dependencies": {
     "@types/morgan": "^1.9.0",
-    "claudia-api-builder": "^4.1.2",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "pg": "^8.0.0",
@@ -24,7 +21,6 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
-    "claudia": "^5.12.0",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^5.5.1"
   }
