@@ -55,6 +55,32 @@ router.post("/", async (req, res) => {
   }
 });
 
+const getUserEventsAndLessons = async user => {
+  let userLessons = await user.getLessons();
+  let userEvents = await user.getEvents();
+
+  userLessons = userLessons.map(lesson => {
+    return lesson.name;
+  });
+
+  userEvents = userEvents.map(event => {
+    return {
+      id: event.id,
+      title: event.title,
+      startDate: event.startDate,
+      endDate: event.endDate
+    };
+  });
+
+  let returnedUser = {
+    ...user.toJSON(),
+    lessons: userLessons,
+    events: userEvents
+  };
+
+  return returnedUser;
+};
+
 router.get("/:email", async (req, res) => {
   let userEmail = req.params.email;
   try {
@@ -76,29 +102,45 @@ router.get("/:email", async (req, res) => {
     });
 
     if (!user) throw new Error("User not found");
-    let userLessons = await user.getLessons();
-    let userEvents = await user.getEvents();
-
-    userLessons = userLessons.map(lesson => {
-      return lesson.name;
-    });
-
-    userEvents = userEvents.map(event => {
-      return {
-        id: event.id,
-        title: event.title,
-        startDate: event.startDate,
-        endDate: event.endDate
-      };
-    });
-
-    let returnedUser = {
-      ...user.toJSON(),
-      lessons: userLessons,
-      events: userEvents
-    };
+    let returnedUser = await getUserEventsAndLessons(user);
 
     res.send(returnedUser);
+  } catch (err) {
+    if (err.message == "User not found") {
+      res.status(404).send({ error: err.message });
+    } else {
+      console.log(err.stack);
+      res.status(500).end();
+    }
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    let users = await User.findAll({
+      attributes: [
+        "email",
+        "role",
+        "displayName",
+        "photoURL",
+        "phoneNumber",
+        "gender",
+        "about",
+        "dob",
+        "languages_known"
+      ]
+    });
+
+    if (users.length === 0) throw new Error("Users not found");
+
+    users = await Promise.all(
+      users.map(async user => {
+        let userInfo = await getUserEventsAndLessons(user);
+        return userInfo;
+      })
+    );
+
+    res.send(users);
   } catch (err) {
     if (err.message == "User not found") {
       res.status(404).send({ error: err.message });

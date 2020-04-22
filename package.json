@@ -6,16 +6,16 @@
   "scripts": {
     "build": "babel src -d bin",
     "start:dev": "nodemon --exec babel-node src/app.js",
-    "create": "yarn build && claudia create --region us-east-1 --api-module bin/api --profile student",
-    "update": "yarn build && claudia update --profile student"
+    "deploy": "yarn build && PORT=80 NODE_ENV=test node bin/app"
   },
   "dependencies": {
     "@types/morgan": "^1.9.0",
-    "claudia-api-builder": "^4.1.2",
+    "core-js": "^3.6.5",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "pg": "^8.0.0",
     "pg-hstore": "^2.3.3",
+    "regenerator-runtime": "^0.13.5",
     "sequelize": "^5.21.6"
   },
   "devDependencies": {
@@ -24,7 +24,6 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
-    "claudia": "^5.12.0",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^5.5.1"
   }
