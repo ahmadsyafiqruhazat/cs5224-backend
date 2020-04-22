@@ -8,12 +8,11 @@
     "operatorsAliases": false
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "username": "postgres",
+    "password": "fXMJHdStNU2eamMBgIxt",
+    "database": "cs5224",
+    "host": "cs5224.cqqprbs1ygmp.us-east-1.rds.amazonaws.com",
+    "dialect": "postgresql"
   },
   "production": {
     "username": "postgres",

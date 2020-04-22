@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
       phoneNumber: DataTypes.STRING,
       gender: DataTypes.STRING,
       about: DataTypes.STRING,
-      dob: DataTypes.STRING,
+      dob: DataTypes.DATE,
       languages_known: DataTypes.STRING
     },
     {}
