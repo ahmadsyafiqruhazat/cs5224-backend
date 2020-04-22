@@ -1,6 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import express, { json, urlencoded } from "express";
+import cors from "cors";
 import logger from "morgan";
 import _database from "./models";
 
@@ -14,10 +15,12 @@ const app = express();
 
 // Log requests to the console.
 app.use(logger("dev"));
+// Enable CORS request
+app.use(cors);
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 
 app.use("/profile", userRouteHandler);
 app.use("/event", eventRouteHandler);
