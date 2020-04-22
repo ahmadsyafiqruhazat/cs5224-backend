@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src -d bin",
-    "start:dev": "nodemon --exec babel-node src/app.js"
+    "start:dev": "nodemon --exec babel-node src/app.js",
+    "deploy": "yarn build && PORT=80 NODE_ENV=test node bin/app"
   },
   "dependencies": {
     "@types/morgan": "^1.9.0",
